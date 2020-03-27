@@ -6,7 +6,8 @@
 
 <ion-content class="ion-padding">
   <ng-container *ngIf="companyInformation$ | async as companyInformation; else loader">
-    {{ companyInformation.summary}}
+    <ngx-json-viewer [json]="companyInformation" [expanded]="false">
+    </ngx-json-viewer>
   </ng-container>
 </ion-content>
 

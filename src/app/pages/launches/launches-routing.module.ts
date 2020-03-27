@@ -36,6 +36,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: ':flightNumber',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./details/details.module').then(m => m.DetailsPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/launches/next',
         pathMatch: 'full'

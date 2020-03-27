@@ -1,9 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>details</ion-title>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-uppercase" *ngIf="launch">DETAILS 🚀 {{launch.mission_name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="ion-padding">
+  <ngx-json-viewer [json]="launch" [expanded]="false">
+  </ngx-json-viewer>
 </ion-content>

@@ -24,6 +24,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "core-js": "^2.5.4",
+    "ngx-json-viewer": "^2.4.0",
     "ngx-progressbar": "^6.0.2",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
