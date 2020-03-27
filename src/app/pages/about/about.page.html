@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>ABOUT</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ng-container *ngIf="companyInformation$ | async as companyInformation; else loader">
+    {{ companyInformation.summary}}
+  </ng-container>
+</ion-content>
+
+<ng-template #loader>
+  <div>
+    <ion-skeleton-text animated></ion-skeleton-text>
+    <ion-skeleton-text animated></ion-skeleton-text>
+    <ion-skeleton-text animated></ion-skeleton-text>
+    <ion-skeleton-text animated></ion-skeleton-text>
+    <ion-skeleton-text animated></ion-skeleton-text>
+  </div>
+</ng-template>
