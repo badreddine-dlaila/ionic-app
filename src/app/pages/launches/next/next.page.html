@@ -1,9 +1,67 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>next</ion-title>
+    <ion-title>NEXT</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFavorite()">
+        <ion-icon *ngIf="!isFavorite" slot="icon-only" name="star-outline"></ion-icon>
+        <ion-icon *ngIf="isFavorite" slot="icon-only" name="star"></ion-icon>
+      </ion-button>
+      <ion-button (click)="shareLaunch()">
+        <ion-icon slot="icon-only" name="share"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ng-container *ngIf="nextLaunch$ | async as launch; else loader">
+    <!-- <ion-item-divider color="danger" sticky="true">
+      <ion-label>
+        LIFT OFF IN <countdown [config]="{ stopTime: launch.launch_date_unix}"></countdown>
+      </ion-label>
+    </ion-item-divider> -->
+    <ion-card button [routerLink]="['/launches', launch.flight_number]" routerDirection="forward">
+      <ion-card-header>
+        <ion-card-subtitle>{{launch.launch_date_utc | date:'fullDate'}}</ion-card-subtitle>
+        <ion-card-title>{{launch.mission_name}}</ion-card-title>
+        <ion-note color="secondary">{{launch.launch_site.site_name_long}}</ion-note>
 
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{launch.details}}</p>
+        <ion-row class="pt-3 d-flex flex-row-reverse">
+          <ion-button
+            *ngIf="launch.rocket.first_stage.cores[0].landing_intent && launch.rocket.first_stage.cores[0].landing_vehicle"
+            disabled="true" color="warning" expand="block" fill="outline" size="small">
+            {{launch.rocket.first_stage.cores[0].landing_vehicle}}</ion-button>
+          <ion-button disabled="true" color="warning" expand="block" fill="outline" size="small">
+            {{launch.rocket.second_stage.payloads[0].orbit}}</ion-button>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
 </ion-content>
+
+<ng-template #loader>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>
+        <ion-skeleton-text style="width: 20%"></ion-skeleton-text>
+      </ion-card-subtitle>
+      <ion-card-title>
+        <ion-skeleton-text style="width: 60%"></ion-skeleton-text>
+        <ion-skeleton-text style="width: 40%"></ion-skeleton-text>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        <ion-skeleton-text></ion-skeleton-text>
+        <ion-skeleton-text></ion-skeleton-text>
+        <ion-skeleton-text></ion-skeleton-text>
+        <ion-skeleton-text></ion-skeleton-text>
+        <ion-skeleton-text></ion-skeleton-text>
+        <ion-skeleton-text></ion-skeleton-text>
+      </p>
+    </ion-card-content>
+  </ion-card>
+</ng-template>

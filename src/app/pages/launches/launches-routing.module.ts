@@ -14,25 +14,25 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('./next/next.module').then(m => m.NextPageModule)
-          },
+          }
+        ],
+      },
+      {
+        path: 'past',
+        children: [
           {
-            path: 'past',
-            children: [
-              {
-                path: '',
-                loadChildren: () => import('./past/past-routing.module').then(m => m.PastPageRoutingModule)
-              }
-            ]
-          },
+            path: '',
+            loadChildren: () => import('./past/past.module').then(m => m.PastPageModule)
+          }
+        ]
+      },
+      {
+        path: 'upcoming',
+        children: [
           {
-            path: 'upcoming',
-            children: [
-              {
-                path: '',
-                loadChildren: () => import('./upcoming/upcoming.module').then(m => m.UpcomingPageModule)
-              }
-            ]
-          },
+            path: '',
+            loadChildren: () => import('./upcoming/upcoming.module').then(m => m.UpcomingPageModule)
+          }
         ]
       },
       {

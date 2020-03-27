@@ -1,9 +1,93 @@
-<ion-header>
+<ion-header translucent="true">
   <ion-toolbar>
-    <ion-title>past</ion-title>
+    <ion-buttons *ngIf="!showSearchbar" slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-segment *ngIf="ios" [(ngModel)]="segment" (ionChange)="updateLaunchList($event)">
+      <ion-segment-button value="all">
+        ALL
+      </ion-segment-button>
+      <ion-segment-button value="favorites">
+        FAVORITES
+      </ion-segment-button>
+    </ion-segment>
+    <ion-title *ngIf="!ios && !showSearchbar">PAST</ion-title>
+    <ion-searchbar *ngIf="showSearchbar" showCancelButton="always" [(ngModel)]="queryText"
+      (ionChange)="updateLaunchList($event)" (ionCancel)="showSearchbar = false" placeholder="Search"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="!ios">
+    <ion-segment [(ngModel)]="segment" (ionChange)="updateLaunchList($event)">
+      <ion-segment-button value="all">
+        All
+      </ion-segment-button>
+      <ion-segment-button value="favorites">
+        Favorites
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen="true">
+  <ng-container *ngIf="launches">
+    <ion-list #launchList>
+      <ion-item-sliding #slidingItem *ngFor="let l of launches">
+        <ion-item-options side="start">
+          <ion-item-option (click)="addFavorite(slidingItem, l)" *ngIf="segment === 'all'">Favorite</ion-item-option>
+        </ion-item-options>
+        <ion-item [routerLink]="['/launches/', l.flight_number]" routerLinkActive="selected" routerDirection="forward">
+          <!-- <ion-thumbnail slot="start">
+            <img *ngIf="l.links.mission_patch" [src]="l.links.mission_patch">
+          </ion-thumbnail> -->
+          <ion-label class="d-inline">
+            <h2>{{l.mission_name}}</h2>
+            <p> {{l.launch_date_utc | date : 'medium'}} UTC</p>
+            <p>{{l.launch_site.site_name}}</p>
+            <p>{{l.rocket.rocket_name}}</p>
+          </ion-label>
+          <ion-note slot="end" class="d-none d-md-block">
+            <ion-row *ngIf="l.launch_success else launch_failed">
+              <ion-col>
+                <ion-button disabled="true" color="success" expand="block" fill="outline" size="small">succeeded
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button disabled="true" color="warning" expand="block" fill="outline" size="small">
+                  {{l.rocket.second_stage.payloads[0].orbit}}</ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col *ngFor="let core of l.rocket.first_stage.cores">
+                <ng-container *ngIf="core.landing_intent && core.landing_vehicle">
+                  <ng-container [ngTemplateOutlet]="core.land_success ? land_succeeded : land_failed"
+                    [ngTemplateOutletContext]="{core : core}">
+                  </ng-container>
+                </ng-container>
+              </ion-col>
+            </ion-row>
+          </ion-note>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+  </ng-container>
 
+  <ng-template #launch_failed>
+    <ng-container>
+      <ion-button disabled="true" color="danger" expand="block" fill="outline" size="small">failed</ion-button>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #land_succeeded let-core="core">
+    <ion-button disabled="true" color="success" expand="block" fill="outline" size="small">
+      {{core.landing_vehicle}}</ion-button>
+  </ng-template>
+
+  <ng-template #land_failed let-core="core">
+    <ion-button disabled="true" color="danger" expand="block" fill="outline" size="small">
+      {{core.landing_vehicle}}</ion-button>
+  </ng-template>
 </ion-content>
